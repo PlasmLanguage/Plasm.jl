@@ -1,10 +1,22 @@
-
 using Plasm
-cube = CUBE(1)::Hpc
-hpc = UNION(
-DIFFERENCE( cube, T(1,2,3)(.5,.5,.5), cube),
-T([1,2])([0.75,.25]),
-DIFFERENCE( cube, T(1,2,3)(.5,.5,.5), cube))::Hpc
-result = BOOL(hpc)::Lar
-VIEWCOMPLEX(result, show=["FV"], explode=[1.2,1.2,1.2])
-VIEWCOMPLEX(result, show=["CV"], explode=[5,5,5])
+
+
+tetra      = HPCSIMPLEX(3)
+twotetra   = STRUCT( tetra, S(1)(-1), tetra )
+fourtetra  = STRUCT( twotetra, S(2)(-1), twotetra )
+octahedron = BOOL(UNION( fourtetra, S(3)(-1), fourtetra ))
+
+b=BOUNDARY(octahedron)
+
+
+
+V,FV=BREP(b)
+@show([V,FV])
+
+vol=VOLUME([V,FV])# 8*0.16666
+@show(V)
+@show(FV)
+@show(vol)
+
+VIEWCOMPLEX(b, show=["V","EV","Vtext"])
+

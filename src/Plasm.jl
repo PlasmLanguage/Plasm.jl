@@ -25,6 +25,7 @@ include("./points.jl")
 include("./plane.jl")
 include("./defaults.jl")
 include("./viewer.jl")
+include("./viewer.ply.jl")
 include("./hpc.jl")
 include("./svg.jl")
 
@@ -55,6 +56,9 @@ include("./lar/classify.jl")
 include("./lar/arrange2d.jl")
 include("./lar/arrange3d.jl")
 include("./lar/boolean.jl")
+
+
+include("./get_oriented_triangles.jl")
 
 function __init__()
 	InitPythonHullCode()

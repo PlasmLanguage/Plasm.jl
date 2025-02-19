@@ -34,8 +34,6 @@ export SQRT, PI, COS, LEN, AND, OR, ToFloat64, C, ATAN2, MOD, ADD, MEANPOINT, SK
 import Base.sqrt
 SQRT(f::Function) = x -> f(x)^(1 / 2)
 
-
-
 import Base.-
 -(f::Function, g::Function) = (x...) -> f(x...) - g(x...)
 
@@ -57,11 +55,13 @@ import Base.^
 
 
 PI = pi
+SIN = sin
 COS = cos
 LEN = length
 AND = all
 OR = any
 
+export SIN,COS
 
 
 # /////////////////////////////////////////////////////////////////
@@ -307,7 +307,7 @@ function INSR(f)
 	function INSR0(seq)
 		N = length(seq)
 		res = seq[N]
-		for I in N-2:-1:1
+		for I in N-1:-1:1
 			res = f([seq[I], res])
 		end
 		return res
@@ -334,6 +334,12 @@ BIGGEST = INSL(BIGGER)
 
 # /////////////////////////////////////////////////////////////////
 function CONS(Funs)
+	return function (x)
+		return [f(x) for f in Funs]
+	end
+end
+
+function CONS(Funs...)
 	return function (x)
 		return [f(x) for f in Funs]
 	end
@@ -2739,4 +2745,21 @@ Generate a 1D object of `Hpc` type with `n` unit segments.
 ```
 """
 GRID1(n) = QUOTE(DIESIS(n)(1.0))
+
+
+
+# //////////////////////////////////////////////////////
+# rotated = GR([1,1,1],π/3)(CUBE(1))
+# VIEWCOMPLEX(rotated)
+function GR(d,α)
+	d = [1,1,1]
+	u₃ = normalize(d)
+	u₂ = normalize(u₃ × [0,0,1])
+	u₁ = u₂ × u₃
+
+	Q(d) = [u₁ u₂ u₃]'
+
+	return MAT(HOMO(Q(d)')) ∘ R(1,2)(α) ∘ MAT(HOMO(Q(d)))
+end
+export GR
 
